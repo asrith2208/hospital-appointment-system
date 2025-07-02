@@ -35,7 +35,7 @@ const RegisterPatientPage = () => {
     setIsLoading(true);
     setErrors({});
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/register/patient/', {
+      await axios.post('http://127.0.0.1:8000/api/users/register/patient/', {
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phone,

@@ -1,9 +1,9 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff, LoaderCircle } from 'lucide-react';
+import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
