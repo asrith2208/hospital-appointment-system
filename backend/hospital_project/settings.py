@@ -1,31 +1,44 @@
+# backend/hospital_project/settings.py
 
 import os
 from pathlib import Path
 import environ
 import dj_database_url
 
-# Initialize django-environ
+# 1. Initialize django-environ
 env = environ.Env(
     # Set default values and casting for environment variables
+    # DEBUG will be False if the environment variable is not set
     DEBUG=(bool, False)
 )
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# 2. Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Take environment variables from .env file for local development
+# 3. Read the .env file if it exists (for local development)
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# --- Core Settings ---
-# Fetch the SECRET_KEY from the environment. CRASH if it's not found.
+# 4. Fetch the SECRET_KEY. The app will crash if this is not defined.
 SECRET_KEY = env('SECRET_KEY')
 
-# DEBUG will be False in production unless explicitly set to True
+# 5. Fetch DEBUG status.
 DEBUG = env('DEBUG')
 
-# ALLOWED_HOSTS will be a comma-separated string in the environment
-# e.g., "localhost,127.0.0.1,titikshahospitals.onrender.com"
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+# --- ALLOWED_HOSTS Configuration (The Main Fix) ---
+# Read the ALLOWED_HOSTS from the environment variable as a list of strings
+# The default is an empty list [] if the variable isn't set.
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+
+# This is a robust failsafe for deploying on Render.
+# It gets the public URL of your service from an environment variable
+# that Render automatically provides.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    # If the variable exists, add its value to our list of allowed hosts.
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Debugging: Print the final list to the logs so we can see what Django is using.
+print(f"--- [INFO] Allowed Hosts: {ALLOWED_HOSTS}")
 
 # --- Application definition ---
 INSTALLED_APPS = [
@@ -34,22 +47,27 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # For development with whitenoise
+    'whitenoise.runserver_nostatic', # For serving static files in development
     'django.contrib.staticfiles',
+    
+    # 3rd Party Apps
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt', # Ensure Simple JWT is here
+
+    # Local Apps
     'users',
     'appointments',
     'core',
-    'admin_panel', # Assuming this is one of your apps
+    'admin_panel', # You mentioned this app
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise middleware
+    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise must be high up
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # CORS middleware
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -75,8 +93,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'hospital_project.wsgi.application'
 
 # --- Database ---
-# Render provides the database connection URL in an environment variable.
-# dj-database-url parses it into the correct format for Django.
+# This will use the DATABASE_URL from your Render environment variables in production,
+# and from your local .env file during development.
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL')
@@ -102,15 +120,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# --- Static files (CSS, JavaScript, Images) for Production ---
+# --- Static files (CSS, JavaScript, Images) ---
 STATIC_URL = '/static/'
+# This is where Django will collect all static files for production.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# This makes sure WhiteNoise can find and serve the files efficiently.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- CORS ---
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+# --- CORS (Cross-Origin Resource Sharing) ---
+# Read the allowed frontend URLs from the environment variable as a list.
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+print(f"--- [INFO] CORS Allowed Origins: {CORS_ALLOWED_ORIGINS}") # Debugging
 
 # --- Email ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
