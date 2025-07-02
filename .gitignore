@@ -1,0 +1,27 @@
+# .gitignore in the root directory
+
+# Python / Django
+__pycache__/
+*.pyc
+db.sqlite3
+/staticfiles/
+/media/
+venv/
+*.log
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Frontend
+frontend/node_modules/
+frontend/build/
+frontend/.DS_Store
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# IDE settings
+.vscode/
+.idea/
