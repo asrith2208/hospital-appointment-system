@@ -1,9 +1,9 @@
 
 
 import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { Mail, KeyRound, Eye, EyeOff, CheckCircle, LoaderCircle, ShieldAlert } from 'lucide-react';
+import { Mail, CheckCircle, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
