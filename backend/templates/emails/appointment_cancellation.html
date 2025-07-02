@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Cancellation</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; margin-top: 20px; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+            <td align="center" bgcolor="#0d1a2e" style="padding: 20px 0;">
+                <h1 style="color: #ffffff; margin: 10px 0 0; font-size: 24px;">Titiksha Hospitals</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 40px 30px;">
+                <h2 style="color: #d9534f; font-size: 20px; margin-bottom: 20px;">Appointment Cancellation Notice</h2>
+                <p style="color: #555555; line-height: 1.6;">Dear {{ recipient_name }},</p>
+                <p style="color: #555555; line-height: 1.6;">We are writing to inform you that the following appointment has been cancelled:</p>
+                
+                <!-- Appointment Details Box -->
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px; border: 1px solid #dddddd; border-radius: 5px;">
+                    <tr>
+                        <td bgcolor="#f9f9f9" style="padding: 15px; font-weight: bold; color: #333;">Cancelled Appointment Details</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; line-height: 1.6;">
+                            <p style="margin: 5px 0; color: #555;"><strong style="color: #333;">Patient:</strong> {{ patient_name }}</p>
+                            <p style="margin: 5px 0; color: #555;"><strong style="color: #333;">Doctor:</strong> Dr. {{ doctor_name }}</p>
+                            <p style="margin: 5px 0; color: #555;"><strong style="color: #333;">Original Date:</strong> {{ appointment_date }}</p>
+                            <p style="margin: 5px 0; color: #555;"><strong style="color: #333;">Original Time:</strong> {{ appointment_time }}</p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <p style="color: #555555; line-height: 1.6; margin-top: 25px;">Please visit our portal to book a new appointment or contact our support team if you have any questions.</p>
+                <p style="color: #555555; line-height: 1.6;">We apologize for any inconvenience this may cause.</p>
+                <p style="color: #555555; line-height: 1.6;">Sincerely,<br>The Titiksha Hospitals Team</p>
+            </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+            <td bgcolor="#f4f4f7" style="padding: 20px 30px; text-align: center; color: #888888; font-size: 12px;">
+                <p>You are receiving this email because you have an account with Titiksha Hospitals.</p>
+                <p>© {% now "Y" %} Titiksha Hospitals. All rights reserved.</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
