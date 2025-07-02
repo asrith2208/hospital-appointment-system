@@ -1,0 +1,196 @@
+/* src/index.css */
+@import 'react-datepicker/dist/react-datepicker.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.group:hover .group-hover-pause {
+  animation-play-state: paused;
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+
+body {
+  background-color: #111827; /* A fallback dark background */
+}
+
+@layer utilities {
+  .animated-gradient-background {
+    @apply relative bg-slate-900 overflow-hidden;
+    /* In dark mode, it will be pure black */
+    @apply dark:bg-black;
+  }
+
+  .animated-gradient-background::before,
+  .animated-gradient-background::after {
+    content: '';
+    position: absolute;
+    filter: blur(80px); /* This creates the soft, bubbly edge */
+    border-radius: 50%;
+  }
+
+  .animated-gradient-background::before {
+    width: 350px;
+    height: 350px;
+    background-color: #3b82f6; /* Blue bubble */
+    animation: moveBubble1 20s infinite alternate;
+  }
+
+  .animated-gradient-background::after {
+    width: 250px;
+    height: 250px;
+    background-color: #10b981; /* Green bubble for Doctor forms */
+    animation: moveBubble2 25s infinite alternate;
+  }
+}
+
+@keyframes moveBubble1 {
+  0% { top: -10%; left: -10%; }
+  100% { top: 80%; left: 80%; }
+}
+
+@keyframes moveBubble2 {
+  0% { bottom: -10%; right: -10%; }
+  100% { bottom: 80%; right: 80%; }
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+input[type="password"]::-webkit-password-toggle-button {
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+}
+
+/* In frontend/src/index.css */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@layer utilities {
+  .animated-gradient-background {
+    /* ... */
+  }
+
+  /* --- ADD THIS NEW UTILITY CLASS --- */
+  .glass-card {
+    @apply bg-white/5 dark:bg-white/5 backdrop-blur-lg;
+    
+  }
+}
+
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+@import 'react-datepicker/dist/react-datepicker.css';
+
+@layer components {
+    /* Main Calendar Container */
+    .rbc-calendar {
+        @apply rounded-lg border-gray-200 dark:border-gray-700;
+    }
+
+    /* Toolbar (Today, Back, Next, etc.) */
+    .rbc-toolbar {
+        @apply mb-4 flex flex-col sm:flex-row items-center gap-4;
+    }
+    .rbc-toolbar .rbc-toolbar-label {
+        @apply text-xl font-bold text-gray-800 dark:text-white flex-grow text-center sm:text-left;
+    }
+    .rbc-btn-group {
+        @apply inline-flex items-center gap-px rounded-md shadow-sm;
+    }
+    .rbc-btn-group button {
+        @apply px-4 py-2 text-sm font-semibold bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors duration-150;
+    }
+    .rbc-btn-group button:hover {
+        @apply bg-gray-50 dark:bg-gray-600;
+    }
+    .rbc-btn-group button:first-child {
+        @apply rounded-l-md;
+    }
+    .rbc-btn-group button:last-child {
+        @apply rounded-r-md;
+    }
+    .rbc-btn-group button.rbc-active {
+        @apply bg-blue-600 text-white hover:bg-blue-700;
+    }
+
+    /* Calendar Grid and Headers */
+    .rbc-header {
+        @apply p-2 text-center font-semibold text-gray-600 dark:text-gray-300 border-b border-l border-gray-200 dark:border-gray-700;
+    }
+    .rbc-header:first-child {
+        @apply border-l-0;
+    }
+    .rbc-day-bg {
+        @apply border-l border-gray-200 dark:border-gray-600;
+    }
+    .rbc-day-bg:first-child {
+        @apply border-l-0;
+    }
+    .rbc-month-row {
+        @apply border-t border-gray-200 dark:border-gray-600;
+    }
+
+    /* Today's Date Highlight */
+    .rbc-day-bg.rbc-today {
+        @apply bg-blue-50 dark:bg-blue-900/20;
+    }
+
+    /* Event Styling */
+    .rbc-event {
+        @apply p-1 rounded-md text-xs border-none cursor-pointer;
+    }
+    .rbc-event-label {
+        @apply font-semibold;
+    }
+    .rbc-event-content {
+        @apply text-xs;
+    }
+    
+    /* Agenda View */
+    .rbc-agenda-view table {
+        @apply border-separate border-spacing-y-2;
+    }
+    .rbc-agenda-view .rbc-agenda-table tr {
+        @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-shadow hover:shadow-md;
+    }
+    .rbc-agenda-view .rbc-agenda-table td {
+        @apply p-3 border-none;
+    }
+    .rbc-agenda-view .rbc-agenda-date-cell {
+        @apply font-bold text-lg text-blue-600 dark:text-blue-400;
+    }
+}
+@keyframes blob {
+	0% { transform: translate(0px, 0px) scale(1); }
+	33% { transform: translate(30px, -50px) scale(1.1); }
+	66% { transform: translate(-20px, 20px) scale(0.9); }
+	100% { transform: translate(0px, 0px) scale(1); }
+}
+.animate-blob {
+	animation: blob 7s infinite;
+}
+.animation-delay-4000 {
+	animation-delay: 4s;
+}
