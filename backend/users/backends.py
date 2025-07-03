@@ -1,43 +1,41 @@
+# backend/users/backends.py
 
-
-from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from django.contrib.auth.backends import ModelBackend
 
-User = get_user_model()
+UserModel = get_user_model()
 
-class EmailOrPhoneBackend(ModelBackend):
+class EmailBackend(ModelBackend):
+    """
+    This is a foolproof authentication backend.
+    It first tries to authenticate with the provided identifier as an email.
+    If that fails, it assumes the identifier is a username and tries again.
+    This works for both regular users (using email) and superusers
+    created via the command line (which might rely on username).
+    """
     def authenticate(self, request, username=None, password=None, **kwargs):
-        # The 'username' argument from authenticate() will contain the email/phone identifier
-        identifier = username 
-
+        # The 'username' from the authenticate call is our identifier (email or username)
+        identifier = username
         try:
-            # Try to find a user with the matching email or phone number.
-            # Using __iexact for case-insensitive email matching.
-            user = User.objects.get(Q(email__iexact=identifier) | Q(phone_number__iexact=identifier))
-            
-            # Check the password of the found user.
-            if user.check_password(password):
-                return user
-                
-        except User.DoesNotExist:
-            # --- THE FIX: If our custom lookup fails, try Django's default method ---
-            # This is especially useful for superusers created via the command line
-            # where the 'username' might be the primary identifier used initially.
+            # 1. First, try to fetch the user by email (case-insensitive)
+            user = UserModel.objects.get(email__iexact=identifier)
+        except UserModel.DoesNotExist:
+            # 2. If no user is found by email, try to fetch by username as a fallback
             try:
-                # The default authentication might use the 'username' field.
-                # In our model, 'username' is often the same as 'email'.
-                default_user = User.objects.get(username__iexact=identifier)
-                if default_user.check_password(password):
-                    return default_user
-            except User.DoesNotExist:
-                # If both methods fail, return None.
+                user = UserModel.objects.get(username__iexact=identifier)
+            except UserModel.DoesNotExist:
+                # If user is not found by either email or username, authentication fails.
                 return None
+
+        # 3. If a user was found, check their password
+        if user.check_password(password) and self.user_can_authenticate(user):
+            return user
         
+        # If password check fails, authentication fails.
         return None
 
     def get_user(self, user_id):
         try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
+            return UserModel.objects.get(pk=user_id)
+        except UserModel.DoesNotExist:
             return None
