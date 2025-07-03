@@ -1,17 +1,43 @@
-# backend/users/models.py
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
 import uuid
 
+class UserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
+        if not email:
+            raise ValueError('The Email must be set')
+        email = self.normalize_email(email)
+        username = extra_fields.pop('username', email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('role', 'admin')
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        
+        return self.create_user(email, password, **extra_fields)
+
 class User(AbstractUser):
-    ROLE_CHOICES = (('patient', 'Patient'), ('doctor', 'Doctor'), ('admin', 'Admin'))
+    ROLE_CHOICES = (
+        ('patient', 'Patient'),
+        ('doctor', 'Doctor'),
+        ('admin', 'Admin'),
+    )
     
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='patient')
     full_name = models.CharField(max_length=255, blank=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-
     specialization = models.CharField(max_length=100, blank=True)
     qualification = models.CharField(max_length=200, blank=True)
     years_of_experience = models.PositiveIntegerField(null=True, blank=True)
@@ -26,15 +52,27 @@ class User(AbstractUser):
     research_and_publications = models.TextField(blank=True, null=True)
     patient_rating = models.FloatField(default=0.0)
     total_patients = models.PositiveIntegerField(default=0)
-
     date_of_birth = models.DateField(null=True, blank=True)
     blood_group = models.CharField(max_length=5, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     emergency_contact_name = models.CharField(max_length=255, blank=True, null=True)
     emergency_contact_phone = models.CharField(max_length=20, blank=True, null=True)
+
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.email
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.email
-    
+
 class DoctorLicense(models.Model):
     license_number = models.CharField(max_length=100, unique=True)
     is_used = models.BooleanField(default=False)
@@ -49,8 +87,6 @@ class PasswordResetOTP(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.email}"
-
-
 
 class DoctorSchedule(models.Model):
     DAY_CHOICES = (
@@ -69,7 +105,6 @@ class DoctorSchedule(models.Model):
     end_time = models.TimeField()
 
     class Meta:
-        # A doctor can only have one schedule entry per day
         unique_together = ('doctor', 'day_of_week')
 
     def __str__(self):
