@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 // --- THE DEFINITIVE TEST ---
 // We are temporarily ignoring the environment variable and hardcoding the production URL.
 // This forces the Vercel deployment to use the correct address.
-const baseURL = 'https://titikshahospitals-backend.onrender.com/api';
+const baseURL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
 // The old logic is commented out for now.
 // const baseURL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000/api';

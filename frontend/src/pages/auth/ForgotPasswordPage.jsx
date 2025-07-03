@@ -23,7 +23,7 @@ const ForgotPasswordPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/password-reset/request/', { email });
+            await axios.post('/users/password-reset/request/', { email });
             toast.success('OTP has been sent to your email.');
             setStep(2);
         } catch (err) {

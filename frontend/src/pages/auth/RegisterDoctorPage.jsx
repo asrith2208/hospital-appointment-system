@@ -46,7 +46,7 @@ const RegisterDoctorPage = () => {
         setErrors({});
 
         try {
-            await axios.post('/api/users/register/doctor/', {
+            await axios.post('/users/register/doctor/', {
                 full_name: formData.fullName,
                 email: formData.email,
                 phone_number: formData.phone,
