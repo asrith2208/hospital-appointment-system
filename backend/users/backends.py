@@ -1,3 +1,4 @@
+
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -6,15 +7,23 @@ User = get_user_model()
 
 class EmailOrPhoneBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        try:
-            user = User.objects.get(Q(email__iexact=username) | Q(phone_number__iexact=username))
-        except User.DoesNotExist:
-            return None
-        except User.MultipleObjectsReturned:
-            return User.objects.filter(Q(email__iexact=username) | Q(phone_number__iexact=username)).order_by('id').first()
+        identifier = username 
 
-        if user.check_password(password):
-            return user
+        try:
+            
+            user = User.objects.get(Q(email__iexact=identifier) | Q(phone_number__iexact=identifier))
+            
+            if user.check_password(password):
+                return user
+                
+        except User.DoesNotExist:
+            try:
+                default_user = User.objects.get(username__iexact=identifier)
+                if default_user.check_password(password):
+                    return default_user
+            except User.DoesNotExist:
+                return None
+        
         return None
 
     def get_user(self, user_id):
