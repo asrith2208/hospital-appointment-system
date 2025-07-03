@@ -12,6 +12,7 @@ from rest_framework import viewsets
 from django.utils import timezone
 from rest_framework import permissions
 from core.models import AuditLog 
+from .models import DoctorLicense
 from .permissions import IsAdminUser 
 from appointments.permissions import IsDoctorUser
 from django.db.models import Count
@@ -33,7 +34,8 @@ from .serializers import (
     DoctorListSerializer,
     PatientRegistrationSerializer, 
     LoginSerializer,
-    PatientListSerializer
+    PatientListSerializer,
+    DoctorLicenseSerializer
 )
 
 User = get_user_model()
@@ -294,3 +296,11 @@ class DoctorPatientListView(APIView):
         
         serializer = PatientListSerializer(patients, many=True)
         return Response(serializer.data)
+
+class DoctorLicenseViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for Admins to view and manage Doctor Licenses.
+    """
+    queryset = DoctorLicense.objects.all().order_by('license_number')
+    serializer_class = DoctorLicenseSerializer
+    permission_classes = [IsAdminUser]

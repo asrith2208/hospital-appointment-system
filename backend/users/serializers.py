@@ -144,6 +144,7 @@ class DoctorListSerializer(serializers.ModelSerializer):
 
 
 class PatientDetailSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ['id', 'full_name', 'email', 'phone_number']
@@ -234,3 +235,8 @@ class PatientInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'full_name', 'email', 'role']
+
+class DoctorLicenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorLicense
+        fields = ['id', 'license_number', 'is_used']

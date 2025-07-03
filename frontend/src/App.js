@@ -39,6 +39,7 @@ import SettingsPage from './pages/admin/SettingsPage';
 import AdminSchedulingPage from './pages/admin/AdminSchedulingPage';
 import AuditLogPage from './pages/admin/AuditLogPage';
 import HelpPage from './pages/HelpPage';
+import LicenseManagementPage from './pages/admin/LicenseManagementPage';
 
 
 function App() {
@@ -106,6 +107,8 @@ function App() {
                         <Route path="/admin/scheduling" element={<SchedulingPage />} />
                         <Route path="/admin/reports" element={<ReportsPage />} />
                         <Route path="/admin/settings" element={<SettingsPage />} />
+                        <Route path="/admin/licenses" element={<LicenseManagementPage />} />
+
                         <Route path="/admin/scheduling" element={<AdminSchedulingPage />} />
                         <Route path="/admin/audit-logs" element={<AuditLogPage />} />
                     </Route>

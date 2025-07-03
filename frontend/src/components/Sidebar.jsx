@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Users, Calendar, BarChart2, Settings, ShieldAlert, BookMarked, MessageSquare, History, UserCog, LifeBuoy } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, BarChart2, Settings, ShieldAlert, BookMarked, MessageSquare, History, UserCog, LifeBuoy, ShieldPlus } from 'lucide-react';
 
 const navLinks = {
   admin: [
@@ -12,6 +12,8 @@ const navLinks = {
     { name: 'Reports', path: '/admin/reports', icon: BarChart2 },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
     { name: 'Audit Logs', path: '/admin/audit-logs', icon: ShieldAlert },
+        { name: 'License Management', path: '/admin/licenses', icon: ShieldPlus },
+
   ],
   doctor: [
     { name: 'Dashboard', path: '/doctor/dashboard', icon: LayoutDashboard },

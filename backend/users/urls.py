@@ -13,11 +13,13 @@ from .views import ( AdminUserListView,
                     PasswordResetVerifyView, 
                     PasswordResetConfirmView, 
                     UserViewSet,
-                    DoctorPatientListView )
+                    DoctorPatientListView,
+                    DoctorLicenseViewSet  )
 
 router = DefaultRouter()
 router.register(r'management', UserViewSet, basename='user-management')
 router.register(r'schedules', DoctorScheduleViewSet, basename='doctor-schedule')
+router.register(r'licenses', DoctorLicenseViewSet, basename='doctor-license')
 
 urlpatterns = [
     path('register/patient/', PatientRegistrationView.as_view(), name='patient-register'),
