@@ -11,6 +11,7 @@ from rest_framework import generics, permissions
 from .models import DoctorSchedule
 from rest_framework import viewsets
 from django.utils import timezone
+from rest_framework.permissions import AllowAny
 from rest_framework import permissions
 from core.models import AuditLog 
 from .models import DoctorLicense
@@ -85,6 +86,7 @@ class DoctorRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = PasswordResetRequestSerializer(data=request.data)
