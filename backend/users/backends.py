@@ -1,41 +1,42 @@
 # backend/users/backends.py
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
-UserModel = get_user_model()
+User = get_user_model()
 
-class EmailBackend(ModelBackend):
+class EmailOrPhoneBackend:
     """
-    This is a foolproof authentication backend.
-    It first tries to authenticate with the provided identifier as an email.
-    If that fails, it assumes the identifier is a username and tries again.
-    This works for both regular users (using email) and superusers
-    created via the command line (which might rely on username).
+    Authenticate a user by an exact match on email or phone number.
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
-        # The 'username' from the authenticate call is our identifier (email or username)
+        # 'username' from authenticate() is the identifier we receive.
         identifier = username
-        try:
-            # 1. First, try to fetch the user by email (case-insensitive)
-            user = UserModel.objects.get(email__iexact=identifier)
-        except UserModel.DoesNotExist:
-            # 2. If no user is found by email, try to fetch by username as a fallback
-            try:
-                user = UserModel.objects.get(username__iexact=identifier)
-            except UserModel.DoesNotExist:
-                # If user is not found by either email or username, authentication fails.
-                return None
-
-        # 3. If a user was found, check their password
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
         
+        try:
+            # Find a user that matches either the email (case-insensitive) or the phone number.
+            user = User.objects.get(
+                Q(email__iexact=identifier) | Q(phone_number__exact=identifier)
+            )
+        except User.DoesNotExist:
+            # No user found with that identifier.
+            return None
+        except User.MultipleObjectsReturned:
+            # This should not happen if your email/phone fields are unique.
+            # If it does, return the first one found.
+            user = User.objects.filter(
+                Q(email__iexact=identifier) | Q(phone_number__exact=identifier)
+            ).order_by('id').first()
+
+        # Check if the found user's password is correct.
+        if user and user.check_password(password):
+            return user
+            
         # If password check fails, authentication fails.
         return None
 
     def get_user(self, user_id):
         try:
-            return UserModel.objects.get(pk=user_id)
-        except UserModel.DoesNotExist:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
             return None
