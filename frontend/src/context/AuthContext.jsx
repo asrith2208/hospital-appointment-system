@@ -4,7 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../api/axiosInstance';
 const AuthContext = createContext();
-
+// new 
 export const useAuth = () => {
   return useContext(AuthContext);
 };
