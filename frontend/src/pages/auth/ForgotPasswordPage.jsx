@@ -6,6 +6,8 @@ import AuthLayout from './AuthLayout';
 import { Mail, CheckCircle, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import axiosInstance from '../../api/axiosInstance'; // <-- THE FIX: Import our instance
+import toast from 'react-hot-toast';
 
 const ForgotPasswordPage = () => {
     const [step, setStep] = useState(1); // 1: Enter Email, 2: Verify OTP, 3: Reset Password, 4: Success
@@ -23,7 +25,7 @@ const ForgotPasswordPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            await axios.post('/users/password-reset/request/', { email });
+            await axiosInstance.post('/users/password-reset/request/', { email });
             toast.success('OTP has been sent to your email.');
             setStep(2);
         } catch (err) {
@@ -44,7 +46,7 @@ const ForgotPasswordPage = () => {
             return;
         }
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/password-reset/verify/', { email, otp: enteredOtp });
+            await axiosInstance.post('/users/password-reset/verify/', { email, otp: enteredOtp });
             toast.success('OTP Verified!');
             setStep(3);
         } catch (err) {
@@ -64,7 +66,7 @@ const ForgotPasswordPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/password-reset/confirm/', {
+            await axiosInstance.post('/users/password-reset/confirm/', {
                 email,
                 otp: otp.join(""),
                 new_password: newPassword,
