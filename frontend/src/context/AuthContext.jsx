@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import axiosInstance from '../api/axiosInstance';
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (identifier, password) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/login/', {
+      const response = await axiosInstance.post('/api/users/login/', {
         identifier,
         password,
       });
