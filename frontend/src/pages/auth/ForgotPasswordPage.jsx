@@ -6,8 +6,7 @@ import AuthLayout from './AuthLayout';
 import { Mail, CheckCircle, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import axiosInstance from '../../api/axiosInstance'; // <-- THE FIX: Import our instance
-import toast from 'react-hot-toast';
+import axiosInstance from '../../api/axiosInstance'; 
 
 const ForgotPasswordPage = () => {
     const [step, setStep] = useState(1); // 1: Enter Email, 2: Verify OTP, 3: Reset Password, 4: Success
