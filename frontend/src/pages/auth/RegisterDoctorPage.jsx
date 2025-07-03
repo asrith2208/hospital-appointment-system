@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -43,7 +43,7 @@ const RegisterDoctorPage = () => {
         setErrors({});
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/register/doctor/', {
+            await axios.post('/api/users/register/doctor/', {
                 full_name: formData.fullName,
                 email: formData.email,
                 phone_number: formData.phone,

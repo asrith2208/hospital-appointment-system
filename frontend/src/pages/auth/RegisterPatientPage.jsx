@@ -6,7 +6,7 @@ import AuthLayout from './AuthLayout';
 import { User, Mail, Phone, Lock, Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import axiosInstance from '../../api/axiosInstance';
 const RegisterPatientPage = () => {
 
 
@@ -35,7 +35,7 @@ const RegisterPatientPage = () => {
     setIsLoading(true);
     setErrors({});
     try {
-      await axios.post('http://127.0.0.1:8000/api/users/register/patient/', {
+      await axios.post('/api/users/register/patient/', {
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phone,
