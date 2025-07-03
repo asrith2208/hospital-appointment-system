@@ -34,10 +34,10 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li><a href="/learn-more" className="text-gray-400 hover:text-white">About Us</a></li>
-              <li><a href="https://titikshahospitals.vercel.app/" className="text-gray-400 hover:text-white">Contact</a></li>
-              <li><a href="https://titikshahospitals.vercel.app/" className="text-gray-400 hover:text-white">Feedback</a></li>
-              <li><a href="https://titikshahospitals.vercel.app/" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
-              <li><a href="https://titikshahospitals.vercel.app/" className="text-gray-400 hover:text-white">Terms & Conditions</a></li>
+              <li><a href="/#" className="text-gray-400 hover:text-white">Contact</a></li>
+              <li><a href="/#" className="text-gray-400 hover:text-white">Feedback</a></li>
+              <li><a href="/#" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
+              <li><a href="/#" className="text-gray-400 hover:text-white">Terms & Conditions</a></li>
             </ul>
           </div>
 
@@ -46,7 +46,7 @@ const Footer = () => {
              <ul className="space-y-2 text-sm">
                 <li><a href="/learn-more#departments" className="text-gray-400 hover:text-white">Departments</a></li>
                 <li><a href="/learn-more#branches" className="text-gray-400 hover:text-white">Find a Branch</a></li>
-                <li><a href="https://titikshahospitals.vercel.app/" className="text-gray-400 hover:text-white">Health Packages</a></li>
+                <li><a href="/#" className="text-gray-400 hover:text-white">Health Packages</a></li>
              </ul>
           </div>
           

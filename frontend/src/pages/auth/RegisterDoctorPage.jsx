@@ -6,6 +6,7 @@ import AuthLayout from './AuthLayout';
 import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import axiosInstance from '../../api/axiosInstance';
 
 const specializationsList = [
     'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics',
