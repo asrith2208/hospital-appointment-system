@@ -7,7 +7,7 @@ const baseURL = process.env.REACT_APP_API_BASE_URL;
 const axiosInstance = axios.create({
     baseURL,
 });
-
+//oiujiugveinieotrtog3j5
 axiosInstance.interceptors.request.use(async req => {
     let authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null;
 
@@ -43,4 +43,3 @@ axiosInstance.interceptors.request.use(async req => {
 });
 
 export default axiosInstance;
-//abc
