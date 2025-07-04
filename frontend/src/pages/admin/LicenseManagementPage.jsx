@@ -14,7 +14,7 @@ const LicenseManagementPage = () => {
     const fetchLicenses = async () => {
         setIsLoading(true);
         try {
-            const response = await axiosInstance.get('/api/users/licenses/');
+            const response = await axiosInstance.get('/users/licenses/');
             setLicenses(response.data);
         } catch (error) {
             toast.error("Failed to fetch license numbers.");
@@ -35,7 +35,7 @@ const LicenseManagementPage = () => {
         }
         setIsSubmitting(true);
         try {
-            const response = await axiosInstance.post('/api/users/licenses/', {
+            const response = await axiosInstance.post('/users/licenses/', {
                 license_number: newLicense
             });
             // Add the new license to the top of the list
