@@ -1,15 +1,15 @@
-
+// frontend/src/pages/auth/RegisterDoctorPage.jsx
 
 import React, { useState } from 'react';
-// --- FORCING A CHANGE FOR GIT ---
-
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff, LoaderCircle } from 'lucide-react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+
+// --- THE FIX: Only import our custom axiosInstance ---
 import axiosInstance from '../../api/axiosInstance';
- 
+// We have removed 'import axios from 'axios';'
+
 const specializationsList = [
     'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics',
     'Dermatology', 'Oncology', 'Gastroenterology', 'General Surgery'
@@ -46,7 +46,8 @@ const RegisterDoctorPage = () => {
         setErrors({});
 
         try {
-            await axios.post('/users/register/doctor/', {
+            // --- THE FIX: Use `axiosInstance` and the full relative path from the /api root ---
+            await axiosInstance.post('/users/register/doctor/', {
                 full_name: formData.fullName,
                 email: formData.email,
                 phone_number: formData.phone,
@@ -65,6 +66,7 @@ const RegisterDoctorPage = () => {
                 toast.error('Please correct the errors and try again.');
             } else {
                 toast.error('An unexpected error occurred. Please try again.');
+                console.error("Doctor registration error:", error); // Added for better debugging
             }
         } finally {
             setIsLoading(false);
@@ -77,7 +79,7 @@ const RegisterDoctorPage = () => {
                 {/* Left Side (Green Branding Panel) */}
                 <div className="w-full lg:w-2/5 flex flex-col justify-center items-center bg-green-600 p-12 text-white text-center">
                     <img src="/titiksha-logo.png" alt="Logo" className="h-24 w-24 mb-6 filter brightness-0 invert" />
-                    <h1 className="text-4xl font-bold mb-4">Titiksha Ups Hospitals</h1>
+                    <h1 className="text-4xl font-bold mb-4">Titiksha Hospitals</h1>
                     <p className="text-green-100 leading-relaxed">
                         Join our medical team and be part of providing exceptional healthcare services to our community.
                     </p>
@@ -116,14 +118,13 @@ const RegisterDoctorPage = () => {
     );
 };
 
+// These helper components are fine and do not need changes.
 const InputField = ({ name, label, type, placeholder, Icon, value, onChange, error }) => (
     <div><label htmlFor={name} className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{label}</label><div className="relative"><span className="absolute inset-y-0 left-0 flex items-center pl-3"><Icon className="h-5 w-5 text-gray-400" /></span><input id={name} name={name} type={type} placeholder={placeholder} value={value} onChange={onChange} className={`w-full bg-gray-100 dark:bg-slate-700/50 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-800 dark:text-white rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-green-500`} /></div>{error && <p className="text-red-500 text-xs mt-1">{error[0]}</p>}</div>
 );
-
 const PasswordField = ({ name, label, placeholder, value, onChange, error, showPassword, toggleShowPassword }) => (
     <div><label htmlFor={name} className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{label}</label><div className="relative"><span className="absolute inset-y-0 left-0 flex items-center pl-3"><Lock className="h-5 w-5 text-gray-400" /></span><input id={name} name={name} type={showPassword ? 'text' : 'password'} placeholder={placeholder} value={value} onChange={onChange} className={`w-full bg-gray-100 dark:bg-slate-700/50 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-800 dark:text-white rounded-lg py-2.5 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500`} /><button type="button" onClick={toggleShowPassword} className="absolute inset-y-0 right-0 flex items-center pr-3">{showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}</button></div>{error && <p className="text-red-500 text-xs mt-1">{error[0]}</p>}</div>
 );
-
 const SelectField = ({ name, label, Icon, value, onChange, error, options }) => (
     <div><label htmlFor={name} className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">{label}</label><div className="relative"><span className="absolute inset-y-0 left-0 flex items-center pl-3"><Icon className="h-5 w-5 text-gray-400" /></span><select id={name} name={name} value={value} onChange={onChange} className={`w-full bg-gray-100 dark:bg-slate-700/50 border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} text-gray-800 dark:text-white rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-green-500`}><option value="">Select Specialization</option>{options.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select></div>{error && <p className="text-red-500 text-xs mt-1">{error[0]}</p>}</div>
 );
