@@ -135,12 +135,24 @@ CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
 print(f"--- [INFO] CORS Allowed Origins: {CORS_ALLOWED_ORIGINS}") # Debugging
 
 # --- Email ---
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+SENDGRID_API_KEY = env('SENDGRID_API_KEY', default=None)
+
+if SENDGRID_API_KEY:
+    # Use SendGrid if the API key is provided (in production)
+    EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+    # These settings are for sendgrid_backend
+    SENDGRID_SANDBOX_MODE_IN_DEBUG = False # Set to True if you want to test without sending real emails
+else:
+    # Fallback to SMTP for local development
+    print("--- [WARNING] SENDGRID_API_KEY not found. Falling back to SMTP for local email. ---")
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+# This is used as the 'From' name in emails
 DEFAULT_FROM_EMAIL = f"Titiksha Hospitals <{env('EMAIL_HOST_USER')}>"
 
 # --- Django REST Framework ---
