@@ -7,6 +7,9 @@ import random
 import os
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 from rest_framework import generics, permissions
 from .models import DoctorSchedule
 from rest_framework import viewsets
@@ -99,34 +102,31 @@ class PasswordResetRequestView(APIView):
             otp_code = ''.join(random.choices('0123456789', k=6))
             PasswordResetOTP.objects.create(user=user, otp_code=otp_code)
 
-        try:
             print(f"--- [INFO] Attempting to send OTP email to {email} ---")
-            send_mail(
-                'Password Reset OTP for Titiksha Hospitals',
-                f'Your One-Time Password (OTP) for password reset is: {otp_code}',
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=False,
-            )
-            print(f"--- [SUCCESS] Email sent successfully to {email} ---")
-            return Response({"message": "OTP sent to your email address."}, status=status.HTTP_200_OK)
-            
-        except SMTPException as e:
-                # This will catch specific email-related errors
-                print(f"--- [ERROR] SMTP failed: {str(e)} ---")
-                # Return a more specific error message to the user
-                return Response(
-                    {"error": "There was a problem with the email server. Please try again later."},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-        except Exception as e:
-                # This catches any other unexpected error
+            try:
+                subject = 'Your Password Reset Code for Titiksha Hospitals'
+                context = {
+                    'user_name': user.full_name,
+                    'otp_code': otp_code,
+                }
+                
+                html_content = render_to_string('emails/password_reset_otp.html', context)
+                text_content = f"Your password reset OTP is: {otp_code}"
+
+                # This line will now work because `settings` is imported
+                msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+                return Response({"message": "OTP sent to your email address."}, status=status.HTTP_200_OK)
+
+            except Exception as e:
                 print(f"--- [ERROR] An unexpected error occurred during email sending: {str(e)} ---")
                 return Response(
-                    {"error": "An unexpected server error occurred."},
+                    {"error": "There was a problem sending the password reset email. Please try again later."},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
-
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
