@@ -1,4 +1,3 @@
-# backend/hospital_project/settings.py
 
 import os
 from pathlib import Path
@@ -7,67 +6,55 @@ import dj_database_url
 
 # 1. Initialize django-environ
 env = environ.Env(
-    # Set default values and casting for environment variables
-    # DEBUG will be False if the environment variable is not set
+    # Set default values. DEBUG will be False if the environment variable is not set.
     DEBUG=(bool, False)
 )
 
 # 2. Define the base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 3. Read the .env file if it exists (for local development)
+# 3. Read the .env file if it exists (this is for your local development)
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# 4. Fetch the SECRET_KEY. The app will crash if this is not defined.
+# 4. Core Security Settings
 SECRET_KEY = env('SECRET_KEY')
-
-# 5. Fetch DEBUG status.
 DEBUG = env('DEBUG')
 
-# --- ALLOWED_HOSTS Configuration (The Main Fix) ---
-# Read the ALLOWED_HOSTS from the environment variable as a list of strings
-# The default is an empty list [] if the variable isn't set.
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
-
-# This is a robust failsafe for deploying on Render.
-# It gets the public URL of your service from an environment variable
-# that Render automatically provides.
+# 5. Allowed Hosts Configuration (with Render failsafe)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
-    # If the variable exists, add its value to our list of allowed hosts.
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# Debugging: Print the final list to the logs so we can see what Django is using.
 print(f"--- [INFO] Allowed Hosts: {ALLOWED_HOSTS}")
 
-# --- Application definition ---
+# 6. Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # For serving static files in development
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     
     # 3rd Party Apps
     'rest_framework',
     'corsheaders',
-    'rest_framework_simplejwt', # Ensure Simple JWT is here
+    'rest_framework_simplejwt',
 
     # Local Apps
     'users',
     'appointments',
     'core',
-    'admin_panel', # You mentioned this app
+    'admin_panel',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise must be high up
-    'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # CORS middleware
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -92,71 +79,60 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'hospital_project.wsgi.application'
 
-# --- Database ---
-# This will use the DATABASE_URL from your Render environment variables in production,
-# and from your local .env file during development.
+# 7. Database Configuration
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL')
     )
 }
 
-# --- Authentication ---
+# 8. Authentication
+AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailOrPhoneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-AUTHENTICATION_BACKENDS = [
-    'users.backends.EmailOrPhoneBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
-AUTH_USER_MODEL = 'users.User'
 
-# --- Internationalization ---
+# 9. Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# --- Static files (CSS, JavaScript, Images) ---
+# 10. Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-# This is where Django will collect all static files for production.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# This makes sure WhiteNoise can find and serve the files efficiently.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- CORS (Cross-Origin Resource Sharing) ---
-# Read the allowed frontend URLs from the environment variable as a list.
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
-print(f"--- [INFO] CORS Allowed Origins: {CORS_ALLOWED_ORIGINS}") # Debugging
+# 11. CORS (Cross-Origin Resource Sharing)
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000', 'http://127.0.0.1:3000'])
+print(f"--- [INFO] CORS Allowed Origins: {CORS_ALLOWED_ORIGINS}")
 
-# --- Email ---
-SENDGRID_API_KEY = env('SENDGRID_API_KEY', default=None)
-
-if SENDGRID_API_KEY:
-    # Use SendGrid if the API key is provided (in production)
-    EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-    # These settings are for sendgrid_backend
-    SENDGRID_SANDBOX_MODE_IN_DEBUG = False # Set to True if you want to test without sending real emails
-else:
-    # Fallback to SMTP for local development
-    print("--- [WARNING] SENDGRID_API_KEY not found. Falling back to SMTP for local email. ---")
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-# This is used as the 'From' name in emails
+# 12. Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = f"Titiksha Hospitals <{env('EMAIL_HOST_USER')}>"
 
-# --- Django REST Framework ---
+# 13. Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
+}
+
+# 14. Simple JWT (Optional: Customize token lifetime)
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }

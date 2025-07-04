@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 import random
 import os
+from django.core.mail import get_connection
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -104,6 +105,15 @@ class PasswordResetRequestView(APIView):
 
             print(f"--- [INFO] Attempting to send OTP email to {email} ---")
             try:
+                connection = get_connection(
+                    backend=settings.EMAIL_BACKEND,
+                    host=settings.EMAIL_HOST,
+                    port=settings.EMAIL_PORT,
+                    username=settings.EMAIL_HOST_USER,
+                    password=settings.EMAIL_HOST_PASSWORD,
+                    use_tls=settings.EMAIL_USE_TLS
+                )
+                
                 subject = 'Your Password Reset Code for Titiksha Hospitals'
                 context = {
                     'user_name': user.full_name,
@@ -113,21 +123,19 @@ class PasswordResetRequestView(APIView):
                 html_content = render_to_string('emails/password_reset_otp.html', context)
                 text_content = f"Your password reset OTP is: {otp_code}"
 
-                # This line will now work because `settings` is imported
-                msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email])
+                msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email], connection=connection)
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
 
+                print(f"--- [SUCCESS] Email sent successfully to {email} ---")
                 return Response({"message": "OTP sent to your email address."}, status=status.HTTP_200_OK)
 
             except Exception as e:
-                print(f"--- [ERROR] An unexpected error occurred during email sending: {str(e)} ---")
+                print(f"--- [CRITICAL ERROR] Email sending failed: {str(e)} ---")
                 return Response(
-                    {"error": "There was a problem sending the password reset email. Please try again later."},
+                    {"error": "The server encountered an error trying to send the password reset email."},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PasswordResetVerifyView(APIView):
