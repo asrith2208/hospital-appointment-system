@@ -1,10 +1,11 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../api/axiosInstance';
+
 const AuthContext = createContext();
-// new 
+
 export const useAuth = () => {
   return useContext(AuthContext);
 };
@@ -29,13 +30,11 @@ export const AuthProvider = ({ children }) => {
     }
   
     setLoading(false);
-
   }, []);
-
 
   const loginUser = async (identifier, password) => {
     try {
-      const response = await axiosInstance.post('/users/login/', {
+      const response = await axiosInstance.post('/api/users/login/', {
         identifier,
         password,
       });
@@ -61,11 +60,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
+    toast.success('You have been logged out.'); // Show toast first
     setTokens(null);
     setUser(null);
     localStorage.removeItem('authTokens');
     localStorage.removeItem('user');
-    toast.success('You have been logged out.');
     navigate('/login');
   };
 
@@ -75,12 +74,11 @@ export const AuthProvider = ({ children }) => {
     loading, 
     loginUser,
     logoutUser,
-    setUser,
+    setUser, 
   };
 
   return (
     <AuthContext.Provider value={contextData}>
-     
       {loading ? null : children}
     </AuthContext.Provider>
   );
