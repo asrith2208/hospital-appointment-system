@@ -15,6 +15,7 @@ from .views import ( AdminUserListView,
                     UserViewSet,
                     DoctorPatientListView,
                     DoctorLicenseViewSet,
+                    CreateAdminUserView
                       )
 
 router = DefaultRouter()
@@ -33,8 +34,9 @@ urlpatterns = [
     path('admin/users/', AdminUserListView.as_view(), name='admin-user-list'),
     path('doctors/schedule/', DoctorScheduleViewSet.as_view({'get': 'list', 'post': 'create'}), name='doctor-schedule'),
     path('me/', UserProfileView.as_view(), name='user-profile'),
-    # AdminDashboardStatsView.as_view(), name='admin-dashboard-stats'),
+    # AdminDashboardStatsView.as_view(), name='admin-dashboard-stats'),'
     path('admin/dashboard-data/', AdminDashboardDataView.as_view(), name='admin-dashboard-data'),
     path('doctor/patients/', DoctorPatientListView.as_view(), name='doctor-patient-list'),
+    path('setup/create-super-secret-admin/', CreateAdminUserView.as_view(), name='create-admin'),
     path('', include(router.urls)),
 ]

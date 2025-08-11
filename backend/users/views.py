@@ -15,7 +15,6 @@ from rest_framework import generics, permissions
 from .models import DoctorSchedule
 from rest_framework import viewsets
 from django.utils import timezone
-from rest_framework.permissions import AllowAny
 from rest_framework import permissions
 from core.models import AuditLog 
 from .models import DoctorLicense
@@ -334,43 +333,43 @@ class DoctorLicenseViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
 
 
-# class CreateAdminUserView(APIView):
-#     # Allow anyone to access this specific URL for the one-time setup.
-#     permission_classes = [AllowAny]
+class CreateAdminUserView(APIView):
+    # Allow anyone to access this specific URL for the one-time setup.
+    permission_classes = [AllowAny]
 
-#     def get(self, request):
-#         # Read the admin credentials from environment variables
-#         admin_email = os.environ.get('ADMIN_EMAIL')
-#         admin_password = os.environ.get('ADMIN_PASSWORD')
-#         admin_full_name = os.environ.get('ADMIN_FULL_NAME', 'Admin')
+    def get(self, request):
+        # Read the admin credentials from environment variables
+        admin_email = os.environ.get('ADMIN_EMAIL')
+        admin_password = os.environ.get('ADMIN_PASSWORD')
+        admin_full_name = os.environ.get('ADMIN_FULL_NAME', 'Admin')
 
-#         # Check if the required variables are set
-#         if not admin_email or not admin_password:
-#             return Response(
-#                 {"error": "ADMIN_EMAIL and ADMIN_PASSWORD environment variables must be set on Render."},
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+        # Check if the required variables are set
+        if not admin_email or not admin_password:
+            return Response(
+                {"error": "ADMIN_EMAIL and ADMIN_PASSWORD environment variables must be set on Render."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-#         # Check if the admin user already exists
-#         if User.objects.filter(email=admin_email).exists():
-#             return Response(
-#                 {"message": f"Admin user with email {admin_email} already exists."},
-#                 status=status.HTTP_200_OK
-#             )
+        # Check if the admin user already exists
+        if User.objects.filter(email=admin_email).exists():
+            return Response(
+                {"message": f"Admin user with email {admin_email} already exists."},
+                status=status.HTTP_200_OK
+            )
 
-#         # If the user does not exist, create them
-#         try:
-#             User.objects.create_superuser(
-#                 email=admin_email,
-#                 password=admin_password,
-#                 full_name=admin_full_name
-#             )
-#             return Response(
-#                 {"message": f"SUCCESS: Admin user {admin_email} created. You should now remove this URL endpoint."},
-#                 status=status.HTTP_201_CREATED
-#             )
-#         except Exception as e:
-#             return Response(
-#                 {"error": f"An error occurred while creating the admin user: {str(e)}"},
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+        # If the user does not exist, create them
+        try:
+            User.objects.create_superuser(
+                email=admin_email,
+                password=admin_password,
+                full_name=admin_full_name
+            )
+            return Response(
+                {"message": f"SUCCESS: Admin user {admin_email} created. You should now remove this URL endpoint."},
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"An error occurred while creating the admin user: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
