@@ -112,7 +112,8 @@ function SecondaryAction() {
 const EmergencyNumbers = () => {
   const emergencyServices = [
     { name: "Ambulance", number: "108", icon: HeartPulse, color: "from-red-500 to-red-600" },
-    { name: "Hospital Emergency", number: "+91‑98765‑43210", icon: X, color: "from-blue-500 to-blue-600" },
+    { name: "Hospital Emergency", number: "+91‑98765‑43210", icon: Phone, color: "from-blue-500 to-blue-600 text-sm break-words" },
+
     { name: "Poison Control", number: "1066", icon: BrainCircuit, color: "from-emerald-500 to-emerald-600" },
     { name: "Police", number: "100", icon: Shield, color: "from-yellow-400 to-yellow-500" },
   ];
