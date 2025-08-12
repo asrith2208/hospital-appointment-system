@@ -27,7 +27,7 @@ const EditPatientProfileModal = ({ isOpen, onClose, user }) => {
         e.preventDefault();
         setIsSaving(true);
         try {
-            const response = await axiosInstance.patch('/users/me/', formData);
+            const response = await axiosInstance.patch('api/users/me/', formData);
             const updatedUser = response.data;
 
             setUser(prevUser => ({ ...prevUser, ...updatedUser }));

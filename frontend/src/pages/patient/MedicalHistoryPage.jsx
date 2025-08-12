@@ -13,7 +13,7 @@ const MedicalHistoryPage = () => {
         const fetchHistory = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/appointments/history/');
+                const response = await axiosInstance.get('/api/appointments/history/');
                 setAppointments(response.data);
             } catch (error) {
                 toast.error("Failed to fetch medical history.");

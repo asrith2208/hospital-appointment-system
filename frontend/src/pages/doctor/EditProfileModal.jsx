@@ -49,7 +49,7 @@ const EditProfileModal = ({ isOpen, onClose, user }) => {
         try {
 
 
-            const response = await axiosInstance.patch('/users/me/', submissionData);
+            const response = await axiosInstance.patch('/api/users/me/', submissionData);
             
             const updatedUser = response.data;
 

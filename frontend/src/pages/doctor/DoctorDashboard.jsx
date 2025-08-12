@@ -15,7 +15,7 @@ const DoctorDashboardPage = () => {
         const fetchDoctorData = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/appointments/doctor/dashboard/');
+                const response = await axiosInstance.get('/api/appointments/doctor/dashboard/');
                 setDashboardData(response.data);
             } catch (error) {
                 toast.error("Could not fetch dashboard data.");
@@ -26,7 +26,7 @@ const DoctorDashboardPage = () => {
         };
 
         fetchDoctorData();
-    }, []); // This effect runs only once on page load
+    }, []); 
 
     const formatTime = (timeStr) => {
         if (!timeStr) return '';

@@ -16,7 +16,7 @@ const PatientDashboard = () => {
         const fetchDashboardData = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/appointments/patient/dashboard/');
+                const response = await axiosInstance.get('/api/appointments/patient/dashboard/');
                 setDashboardData(response.data);
             } catch (error) {
                 toast.error("Failed to load dashboard data.");

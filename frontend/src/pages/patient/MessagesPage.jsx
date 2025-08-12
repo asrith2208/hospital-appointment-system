@@ -19,7 +19,7 @@ const MessagesPage = () => {
         const fetchConversations = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/core/conversations/');
+                const response = await axiosInstance.get('/api/core/conversations/');
                 setConversations(response.data);
 
                 if (response.data.length > 0) {
@@ -38,7 +38,7 @@ const MessagesPage = () => {
         const fetchMessages = async () => {
             if (selectedConversation) {
                 try {
-                    const response = await axiosInstance.get(`/core/conversations/${selectedConversation.id}/messages/`);
+                    const response = await axiosInstance.get(`/api/core/conversations/${selectedConversation.id}/messages/`);
                     setMessages(response.data);
                 } catch (error) {
                     toast.error("Failed to load messages.");
@@ -61,7 +61,7 @@ const MessagesPage = () => {
         if (!newMessage.trim()) return;
         
         try {
-            const response = await axiosInstance.post(`/core/conversations/${selectedConversation.id}/send/`, {
+            const response = await axiosInstance.post(`/api/core/conversations/${selectedConversation.id}/send/`, {
                 content: newMessage,
             });
             setMessages([...messages, response.data]);

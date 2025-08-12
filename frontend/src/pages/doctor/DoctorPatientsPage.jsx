@@ -14,7 +14,7 @@ const DoctorPatientsPage = () => {
         const fetchPatients = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/users/doctor/patients/');
+                const response = await axiosInstance.get('/api/users/doctor/patients/');
                 setPatients(response.data);
             } catch (error) {
                 toast.error("Failed to fetch patient list.");

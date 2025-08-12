@@ -19,7 +19,7 @@ const DoctorSchedulePage = () => {
     const fetchSchedule = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await axiosInstance.get('/appointments/doctor/schedule/');
+            const response = await axiosInstance.get('/api/appointments/doctor/schedule/');
             const formattedEvents = response.data.map(appt => {
                 const start = dayjs(`${appt.appointment_date}T${appt.appointment_time}`).toDate();
                 const end = dayjs(start).add(30, 'minute').toDate();

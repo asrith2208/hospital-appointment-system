@@ -22,7 +22,7 @@ const DoctorAppointmentsPage = () => {
             setIsLoading(true);
             try {
 
-                const response = await axiosInstance.get('/appointments/manage/');
+                const response = await axiosInstance.get('/api/appointments/manage/');
                 setAppointments(response.data);
             } catch (error) {
                 toast.error("Failed to fetch appointments.");
@@ -42,7 +42,7 @@ const DoctorAppointmentsPage = () => {
         setAppointments(updatedAppointments);
 
         try {
-            await axiosInstance.patch(`/appointments/manage/${appointmentId}/`, {
+            await axiosInstance.patch(`/api/appointments/manage/${appointmentId}/`, {
                 status: newStatus
             });
             toast.success("Appointment status updated!");
@@ -67,7 +67,7 @@ const DoctorAppointmentsPage = () => {
                 consultation_notes: notes,
                 prescription: prescription,
             };
-            const response = await axiosInstance.patch(`/appointments/manage/${selectedAppointment.id}/`, payload);
+            const response = await axiosInstance.patch(`/api/appointments/manage/${selectedAppointment.id}/`, payload);
 
             setAppointments(prev => prev.map(appt =>
                 appt.id === selectedAppointment.id ? { ...appt, ...response.data } : appt

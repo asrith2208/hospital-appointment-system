@@ -23,7 +23,7 @@ const BookAppointmentPage = () => {
         const fetchDoctors = async () => {
             setIsLoadingDoctors(true);
             try {
-                const response = await axiosInstance.get('/users/doctors/');
+                const response = await axiosInstance.get('/api/users/doctors/');
                 setDoctors(response.data);
             } catch (error) {
                 toast.error('Could not fetch doctors.');
@@ -44,7 +44,7 @@ const BookAppointmentPage = () => {
                 setSelectedSlot('');
                 try {
                     const dateStr = selectedDate.toISOString().split('T')[0];
-                    const response = await axiosInstance.get('/appointments/availability/', {
+                    const response = await axiosInstance.get('/api/appointments/availability/', {
                         params: { doctor_id: selectedDoctor, date: dateStr },
                     });
                     setAvailableSlots(response.data);
@@ -67,7 +67,7 @@ const BookAppointmentPage = () => {
         }
         setIsBooking(true);
         try {
-            await axiosInstance.post('/appointments/book/', {
+            await axiosInstance.post('/api/appointments/book/', {
                 doctor: selectedDoctor,
                 appointment_date: selectedDate.toISOString().split('T')[0],
                 appointment_time: selectedSlot,
