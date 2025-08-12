@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import toast from 'react-hot-toast';
@@ -30,7 +28,7 @@ const UserManagementPage = () => {
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
-            const response = await axiosInstance.get('/users/management/');
+            const response = await axiosInstance.get('/api/users/management/');
             setUsers(Array.isArray(response.data) ? response.data : (response.data.results || []));
         } catch (error) {
             toast.error("Failed to fetch user data.");
@@ -56,7 +54,7 @@ const UserManagementPage = () => {
         setIsSubmitting(true);
         setErrors({});
         try {
-            const response = await axiosInstance.post('/users/management/', newUser);
+            const response = await axiosInstance.post('/api/users/management/', newUser);
             setUsers([response.data, ...users]);
             toast.success("User added successfully!");
             handleCloseAddModal();
@@ -92,7 +90,7 @@ const UserManagementPage = () => {
         }
 
         try {
-            const response = await axiosInstance.patch(`/users/management/${selectedUser.id}/`, dataToUpdate);
+            const response = await axiosInstance.patch(`/api/users/management/${selectedUser.id}/`, dataToUpdate);
             setUsers(users.map(u => (u.id === selectedUser.id ? response.data : u)));
             toast.success("User updated successfully!");
             handleCloseEditModal();
@@ -111,7 +109,7 @@ const UserManagementPage = () => {
     const handleDelete = async (userId) => {
         if (window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
             try {
-                await axiosInstance.delete(`/users/management/${userId}/`);
+                await axiosInstance.delete(`/api/users/management/${userId}/`);
                 setUsers(users.filter(user => user.id !== userId));
                 toast.success("User deleted successfully.");
             } catch (error) {

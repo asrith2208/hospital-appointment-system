@@ -21,7 +21,7 @@ const SchedulingPage = () => {
 
         const fetchDoctors = async () => {
             try {
-                const response = await axiosInstance.get('/users/doctors/');
+                const response = await axiosInstance.get('/api/users/doctors/');
                 setDoctors(response.data);
             } catch (error) {
                 toast.error("Failed to fetch doctors.");
@@ -36,7 +36,7 @@ const SchedulingPage = () => {
             const fetchSchedule = async () => {
                 setIsLoading(true);
                 try {
-                    const response = await axiosInstance.get(`/users/schedules/?doctor=${selectedDoctorId}`);
+                    const response = await axiosInstance.get(`/api/users/schedules/?doctor=${selectedDoctorId}`);
 
                     const formattedSchedule = response.data.reduce((acc, curr) => {
                         acc[curr.day_of_week] = { 
@@ -84,9 +84,9 @@ const SchedulingPage = () => {
 
 
             if (daySchedule.id) {
-                await axiosInstance.patch(`/users/schedules/${daySchedule.id}/`, payload);
+                await axiosInstance.patch(`/api/users/schedules/${daySchedule.id}/`, payload);
             } else {
-                await axiosInstance.post('/users/schedules/', payload);
+                await axiosInstance.post('/api/users/schedules/', payload);
             }
             toast.success(`${DAYS_OF_WEEK[dayId].name}'s schedule saved!`);
         } catch (error) {

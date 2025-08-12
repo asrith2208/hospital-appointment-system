@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import toast from 'react-hot-toast';
 import { LoaderCircle } from 'lucide-react';
-import Modal from '../../components/Modal'; // Assuming Modal component exists
-import DatePicker from 'react-datepicker'; // We need the date picker for the modal
-
+import Modal from '../../components/Modal'; 
+import DatePicker from 'react-datepicker'; 
 const AdminSchedulingPage = () => {
     const [appointments, setAppointments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

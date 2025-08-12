@@ -13,7 +13,7 @@ const AuditLogPage = () => {
         const fetchLogs = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/core/audit-logs/');
+                const response = await axiosInstance.get('/api/core/audit-logs/');
                 setLogs(response.data);
             } catch (error) {
                 toast.error("Failed to fetch audit logs.");

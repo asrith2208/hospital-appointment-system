@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            await axiosInstance.post('/users/password-reset/request/', { email });
+            await axiosInstance.post('/api/users/password-reset/request/', { email });
             toast.success('OTP has been sent to your email.');
             setStep(2);
         } catch (err) {
@@ -45,7 +45,7 @@ const ForgotPasswordPage = () => {
             return;
         }
         try {
-            await axiosInstance.post('/users/password-reset/verify/', { email, otp: enteredOtp });
+            await axiosInstance.post('/api/users/password-reset/verify/', { email, otp: enteredOtp });
             toast.success('OTP Verified!');
             setStep(3);
         } catch (err) {
@@ -65,7 +65,7 @@ const ForgotPasswordPage = () => {
         setIsLoading(true);
         setError('');
         try {
-            await axiosInstance.post('/users/password-reset/confirm/', {
+            await axiosInstance.post('/api/users/password-reset/confirm/', {
                 email,
                 otp: otp.join(""),
                 new_password: newPassword,

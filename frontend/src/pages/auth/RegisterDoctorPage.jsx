@@ -5,10 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { User, Mail, Phone, Lock, Stethoscope, Award, Calendar, KeySquare, Eye, EyeOff, LoaderCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-// --- THE FIX: Only import our custom axiosInstance ---
 import axiosInstance from '../../api/axiosInstance';
-// We have removed 'import axios from 'axios';'
 
 const specializationsList = [
     'Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics',
@@ -46,8 +43,7 @@ const RegisterDoctorPage = () => {
         setErrors({});
 
         try {
-            // --- THE FIX: Use `axiosInstance` and the full relative path from the /api root ---
-            await axiosInstance.post('/users/register/doctor/', {
+            await axiosInstance.post('/api/users/register/doctor/', {
                 full_name: formData.fullName,
                 email: formData.email,
                 phone_number: formData.phone,
@@ -66,7 +62,7 @@ const RegisterDoctorPage = () => {
                 toast.error('Please correct the errors and try again.');
             } else {
                 toast.error('An unexpected error occurred. Please try again.');
-                console.error("Doctor registration error:", error); // Added for better debugging
+                console.error("Doctor registration error:", error); 
             }
         } finally {
             setIsLoading(false);

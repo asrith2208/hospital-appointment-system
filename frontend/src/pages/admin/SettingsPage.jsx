@@ -13,7 +13,7 @@ const SettingsPage = () => {
         const fetchSettings = async () => {
             setIsLoading(true);
             try {
-                const response = await axiosInstance.get('/admin/settings/');
+                const response = await axiosInstance.get('/api/admin/settings/');
                 setSettings(response.data);
             } catch (error) {
                 toast.error("Failed to load settings.");
@@ -32,7 +32,7 @@ const SettingsPage = () => {
         e.preventDefault();
         setIsSaving(true);
         try {
-            await axiosInstance.post('/admin/settings/', settings);
+            await axiosInstance.post('api/admin/settings/', settings);
             toast.success("Settings saved successfully!");
         } catch (error) {
             toast.error("Failed to save settings.");

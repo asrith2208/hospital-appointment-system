@@ -20,7 +20,7 @@ const AdminDashboardPage = () => {
             setIsLoading(true);
             try {
 
-                const response = await axiosInstance.get('/users/admin/dashboard-data/');
+                const response = await axiosInstance.get('/api/users/admin/dashboard-data/');
                 setDashboardData(response.data);
             } catch (error) {
                 toast.error("Failed to load dashboard data.");

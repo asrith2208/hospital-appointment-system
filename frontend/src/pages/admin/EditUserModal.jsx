@@ -19,7 +19,7 @@ const UserManagementPage = () => {
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
-            const response = await axiosInstance.get('/users/admin/users/');
+            const response = await axiosInstance.get('/api/users/admin/users/');
             setUsers(response.data);
         } catch (error) {
             toast.error("Could not fetch users.");

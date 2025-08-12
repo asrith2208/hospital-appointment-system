@@ -34,7 +34,7 @@ const RegisterPatientPage = () => {
     setIsLoading(true);
     setErrors({});
     try {
-      await axiosInstance.post('/users/register/patient/', {
+      await axiosInstance.post('/api/users/register/patient/', {
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phone,
