@@ -1,17 +1,8 @@
-// frontend/src/api/axiosInstance.js
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import dayjs from 'dayjs';
 
-// --- THE DEFINITIVE TEST ---
-// We are temporarily ignoring the environment variable and hardcoding the production URL.
-// This forces the Vercel deployment to use the correct address.
-const baseURL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000/api';
-
-// The old logic is commented out for now.
-// const baseURL = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000/api';
-
-// --- NO OTHER CHANGES ARE NEEDED IN THIS FILE ---
+const baseURL = `${process.env.REACT_APP_API_BASE_URL}/api` || 'http://127.0.0.1:8000/api';
 
 const axiosInstance = axios.create({
     baseURL
